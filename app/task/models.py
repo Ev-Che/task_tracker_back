@@ -1,10 +1,7 @@
-from sqlalchemy import Column, Integer, String, DateTime
+from sqlmodel import Field
 
-from app.db.base_class import Base
+from app.task.schemas import TaskBase
 
 
-class Task(Base):
-    id = Column(Integer, primary_key=True, index=True)
-    title = Column(String(100), nullable=False)
-    description = Column(String(256), nullable=True)
-    due_date = Column(DateTime)
+class Task(TaskBase, table=True):
+    id: int = Field(default=None, primary_key=True)

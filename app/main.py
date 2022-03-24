@@ -1,20 +1,25 @@
 from functools import lru_cache
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 
-from app import config
+from app.config import Settings
+from app.task.models import Task
+from app.task.main import task_router
 
 app = FastAPI()
+
+app.include_router(task_router)
 
 
 @lru_cache()
 def get_settings():
-    return config.Settings()
+    return Settings()
 
 
 @app.get("/")
-async def root():
-    print(f'config: {get_settings().POSTGRES_USER}')
+async def root(settings: Settings = Depends(get_settings)):
+    print(f'config: {settings.POSTGRES_USER}')
+    print(f'config: {settings.POSTGRES_PASSWORD}')
     return {"message": "Hello World"}
 
 
